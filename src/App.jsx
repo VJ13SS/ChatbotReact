@@ -29,8 +29,8 @@ export default function App() {
     setTimeout(() => {
       updateChatHistory("Hello Viswajith");
       setUserPrompt("");
-    }, 600);
-  };*/
+    }, 600);*/
+  };
 
   const APIKEY = "Your Api key";
   const generateResponse = async () => {
