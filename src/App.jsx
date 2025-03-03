@@ -21,7 +21,7 @@ export default function App() {
 
   const submitForm = (e) => {
     e.preventDefault();
-    alert("key",process.env.REACT_API_KEY)
+    alert("key",process.env.REACT_APP_API_KEY)
     setChatHistory((prev) => [...prev, { type: "user", text: userPrompt }]);
     setChatHistory((prev) => [...prev, { type: "bot", text: "Thinking...." }]);
     generateResponse()
