@@ -3,8 +3,10 @@ import "./App.css";
 import { FaArrowUp, FaRobot } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import Chat from "./components/chat";
+
 export default function App() {
-  const [userPrompt, setUserPrompt] = useState();
+  
+  const [userPrompt, setUserPrompt] = useState("");
   let [chatHistory, setChatHistory] = useState([
     { type: "bot", text: "Hai How May I help You?" },
   ]);
@@ -22,17 +24,19 @@ export default function App() {
 
     setChatHistory((prev) => [...prev, { type: "user", text: userPrompt }]);
     setChatHistory((prev) => [...prev, { type: "bot", text: "Thinking...." }]);
-    //generateResponse()
+    generateResponse()
+    /*
     setTimeout(() => {
       updateChatHistory("Hello Viswajith");
       setUserPrompt("");
     }, 600);
-  };
+  };*/
 
   const APIKEY = "Your Api key";
   const generateResponse = async () => {
-    chatHistory = chatHistory.map(({ role, text }) => ({
-      role,
+    chatHistory = chatHistory.map(({ type, text }) => ({
+      role: type === "user" ? "user" : "bot", // Fix 3
+    
       parts: [{ text }],
     }));
     try {
@@ -44,11 +48,16 @@ export default function App() {
         },
         body: JSON.stringify({ contents: chatHistory }),
       });
+
+      if(!response.ok){
+        throw new Error('Error Occured')
+      }
+      
       const data = await response.json();
       console.log(data);
-      const apiResponse = data.candidates[0].content.parts[0].text
-        .replace(/\*\*(.*?)\*\*/g, "$1")
-        .trim();
+      const apiResponse = data?.candidates[0]?.content?.parts[0]?.text?
+        .replace(/\*\*(.*?)\*\*/g, "$1")?
+        .trim() || "No response Available";
       updateChatHistory(apiResponse);
       setUserPrompt("");
     } catch (error) {
