@@ -55,9 +55,7 @@ export default function App() {
       
       const data = await response.json();
       console.log(data);
-      const apiResponse = data?.candidates[0]?.content?.parts[0]?.text?
-        .replace(/\*\*(.*?)\*\*/g, "$1")?
-        .trim() || "No response Available";
+      const apiResponse = data?.candidates?[0]?.content?.parts[0]?.text?.replace(/\*\*(.*?)\*\*/g, "$1")?.trim() || "No response Available";
       updateChatHistory(apiResponse);
       setUserPrompt("");
     } catch (error) {
