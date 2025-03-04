@@ -32,7 +32,7 @@ export default function App() {
     }, 600);*/
   };
 
-  const APIKEY = "AIzaSyDQ5YD6KRjnVgDtNMdo3KK6LWOKWWJHb9k";
+  const APIKEY = "AIzaSyC_Q9VWMFzUTsKlSG5YdBUfBGK-fe8emkI";
   const generateResponse = async () => {
     chatHistory = chatHistory.map(({ type, text }) => ({
       role: type === "user" ? "user" : "bot", // Fix 3
