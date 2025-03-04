@@ -24,15 +24,15 @@ export default function App() {
     //alert("key",process.env.REACT_APP_API_KEY)
     setChatHistory((prev) => [...prev, { type: "user", text: userPrompt }]);
     setChatHistory((prev) => [...prev, { type: "bot", text: "Thinking...." }]);
-   // generateResponse()
-    
+    generateResponse()
+    /*
     setTimeout(() => {
       updateChatHistory("Hello Viswajith");
       setUserPrompt("");
-    }, 600);
+    }, 600);*/
   };
 
-  //const APIKEY = "AIzaSyDQ5YD6KRjnVgDtNMdo3KK6LWOKWWJHb9k";
+  const APIKEY = "AIzaSyDQ5YD6KRjnVgDtNMdo3KK6LWOKWWJHb9k";
   const generateResponse = async () => {
     chatHistory = chatHistory.map(({ type, text }) => ({
       role: type === "user" ? "user" : "bot", // Fix 3
