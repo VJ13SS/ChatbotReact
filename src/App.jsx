@@ -32,7 +32,7 @@ export default function App() {
     }, 600);*/
   };
 
-  const APIKEY = "AIzaSyC_Q9VWMFzUTsKlSG5YdBUfBGK-fe8emkI";
+  const APIKEY = import.meta.env.VITE_GEMINI_API_KEY;
   const generateResponse = async () => {
     chatHistory = chatHistory.map(({ type, text }) => ({
       role: type === "user" ? "user" : "bot", // Fix 3
