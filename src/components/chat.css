@@ -22,7 +22,10 @@
   color: white;
   font-weight: bold;
 }
-
+.bot-text span .icons{
+  display: flex;
+  gap: 5px;
+}
 .bot-text span {
   border-radius: 10px 10px 10px 0px;
   background-color: rgb(220, 214, 225);
@@ -36,6 +39,7 @@
   border-radius: 10px 10px 0px 10px;
   background-color: rgb(145, 16, 224);
 }
+
 
 .user-text {
   align-self: flex-end;

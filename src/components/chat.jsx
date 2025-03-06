@@ -1,14 +1,25 @@
-import { FaFilePdf, FaRobot } from "react-icons/fa";
+import { FaCopy, FaFilePdf, FaRobot } from "react-icons/fa";
 import "./chat.css";
 import jsPDF from "jspdf";
 
 export default function Chat({ chat, text }) {
+  const generatePdf = (chat) => {
+    const doc = new jsPDF();
+    const marginLeft = 10
+    const marginTop = 10
 
-    const generatePdf = (chat) => {
-        const doc = new jsPDF()
-        doc.text(chat,10,10)
-        doc.save("chat_response.pdf")
-    }
+    doc.setFontSize(16)
+    
+    doc.text(chat, marginLeft, marginTop,{maxWidth: 180});
+    doc.save("chat_response.pdf");
+  };
+
+  const copyText = (chat) => {
+    navigator.clipboard
+      .writeText(chat)
+      .then(() => console.log("text copied"))
+      .catch(() => console.log("error"));
+  };
 
   return (
     <div className={`${chat}-text`}>
@@ -16,11 +27,18 @@ export default function Chat({ chat, text }) {
       <span>
         {text}
         {chat == "bot" && (
-          <FaFilePdf
-            size={15}
-            style={{ color: "gray", cursor: "pointer" }}
-            onClick={() => generatePdf(text)}
-          />
+          <div className="icons">
+            <FaFilePdf
+              size={15}
+              style={{ color: "gray", cursor: "pointer" }}
+              onClick={() => generatePdf(text)}
+            />
+            <FaCopy
+              size={15}
+              style={{ color: "gray", cursor: "pointer" }}
+              onClick={copyText(text)}
+            />
+          </div>
         )}
       </span>
     </div>

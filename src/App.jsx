@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import Chat from "./components/chat";
 
 export default function App() {
-  
   const [userPrompt, setUserPrompt] = useState("");
   let [chatHistory, setChatHistory] = useState([
     { type: "bot", text: "Hai How May I help You?" },
@@ -24,19 +23,21 @@ export default function App() {
     //alert("key",process.env.REACT_APP_API_KEY)
     setChatHistory((prev) => [...prev, { type: "user", text: userPrompt }]);
     setChatHistory((prev) => [...prev, { type: "bot", text: "Thinking...." }]);
-    generateResponse()
-    /*
+    //generateResponse()
+
     setTimeout(() => {
-      updateChatHistory("Hello Viswajith");
+      updateChatHistory(
+        "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Adipisci, quas ab vel soluta facere voluptatibus ut. Sequi, a! Minus voluptas hic tempore deleniti natus, quae exercitationem temporibus illum odit voluptatibus?"
+      );
       setUserPrompt("");
-    }, 600);*/
+    }, 600);
   };
 
-  const APIKEY = import.meta.env.VITE_GEMINI_API_KEY;
+  const APIKEY = "";
   const generateResponse = async () => {
     chatHistory = chatHistory.map(({ type, text }) => ({
       role: type === "user" ? "user" : "bot", // Fix 3
-    
+
       parts: [{ text }],
     }));
     try {
@@ -49,17 +50,19 @@ export default function App() {
         body: JSON.stringify({ contents: chatHistory }),
       });
 
-      if(!response.ok){
-        throw new Error('Error Occured')
+      if (!response.ok) {
+        throw new Error("Error Occured");
       }
-      
+
       const data = await response.json();
       console.log(data);
-      alert("ok")
+      alert("ok");
       const apiResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text
-  ? data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim()
-  : "No response available";
- updateChatHistory(apiResponse);
+        ? data.candidates[0].content.parts[0].text
+            .replace(/\*\*(.*?)\*\*/g, "$1")
+            .trim()
+        : "No response available";
+      updateChatHistory(apiResponse);
       setUserPrompt("");
     } catch (error) {
       console.log(error);
@@ -72,17 +75,18 @@ export default function App() {
       behaviour: "smooth",
     });
   }, [chatHistory]);
-
   return (
     <div className="container">
       <div className="chatbot-popup">
         <ChatbotHeader />
+        <div className="logo">
+          <img src="./logo.jpg" alt="" />
+        </div>
         <div className="chats" ref={chatBodyRef}>
           {chatHistory.map((chat, index) => {
             return <Chat chat={chat.type} text={chat.text} key={index} />;
           })}
         </div>
-
         <div className="user-input">
           <form action="#" onSubmit={submitForm}>
             <input
