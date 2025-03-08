@@ -36,7 +36,7 @@ export default function Chat({ chat, text }) {
             <FaCopy
               size={15}
               style={{ color: "gray", cursor: "pointer" }}
-              onClick={copyText(text)}
+              onClick={() => copyText(text)}
             />
           </div>
         )}

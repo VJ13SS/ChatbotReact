@@ -18,36 +18,32 @@ export default function App() {
     ]);
   };
 
+  //localStorage.clear()
   const submitForm = (e) => {
     e.preventDefault();
-    //alert("key",process.env.REACT_APP_API_KEY)
-    setChatHistory((prev) => [...prev, { type: "user", text: userPrompt }]);
-    setChatHistory((prev) => [...prev, { type: "bot", text: "Thinking...." }]);
-    //generateResponse()
 
-    setTimeout(() => {
+    setChatHistory((prev) => [...prev, { type: "user", text: userPrompt }]);
+
+    setChatHistory((prev) => [...prev, { type: "bot", text: "Thinking...." }]);
+    generateResponse();
+    setUserPrompt("");
+    /*setTimeout(() => {
       updateChatHistory(
         "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Adipisci, quas ab vel soluta facere voluptatibus ut. Sequi, a! Minus voluptas hic tempore deleniti natus, quae exercitationem temporibus illum odit voluptatibus?"
       );
       setUserPrompt("");
-    }, 600);
+    }, 600);*/
   };
 
-  const APIKEY = "";
   const generateResponse = async () => {
-    chatHistory = chatHistory.map(({ type, text }) => ({
-      role: type === "user" ? "user" : "bot", // Fix 3
-
-      parts: [{ text }],
-    }));
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${APIKEY}`;
+      const url = `http://127.0.0.1:5000/response`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ contents: chatHistory }),
+        body: JSON.stringify({ prompt: userPrompt }),
       });
 
       if (!response.ok) {
@@ -56,18 +52,26 @@ export default function App() {
 
       const data = await response.json();
       console.log(data);
-      alert("ok");
-      const apiResponse = data?.candidates?.[0]?.content?.parts?.[0]?.text
-        ? data.candidates[0].content.parts[0].text
-            .replace(/\*\*(.*?)\*\*/g, "$1")
-            .trim()
-        : "No response available";
-      updateChatHistory(apiResponse);
-      setUserPrompt("");
+
+      updateChatHistory(data["response"]);
+      localStorage.setItem(
+        "chat-history",
+        JSON.stringify([
+          ...chatHistory.filter((item) => item.text != "Thinking...."),
+          { type: "user", text: userPrompt },
+          { type: "bot", text: data["response"] },
+        ])
+      );
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    let chats = JSON.parse(localStorage.getItem("chat-history"));
+    console.log(chats, chatHistory);
+    setChatHistory(chats || [{ type: "bot", text: "Hai How May I help You?" }]);
+  }, []);
 
   useEffect(() => {
     chatBodyRef.current.scrollTo({
@@ -75,10 +79,11 @@ export default function App() {
       behaviour: "smooth",
     });
   }, [chatHistory]);
+
   return (
     <div className="container">
       <div className="chatbot-popup">
-        <ChatbotHeader />
+        <ChatbotHeader setChatHistory={setChatHistory} />
         <div className="logo">
           <img src="./logo.jpg" alt="" />
         </div>
